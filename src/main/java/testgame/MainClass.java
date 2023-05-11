@@ -89,8 +89,11 @@ public class MainClass extends PluginBase {
     }
 
     public void loadLanguage(){
-        this.saveResource(path+"/languages/zh_CN.properties", false);
+        this.saveResource("languages/zh_CN.properties", false);
+        this.saveResource("languages/en_US.properties", false);
         language.addLanguage(new File(path+"/languages/zh_CN.properties"));
+        language.addLanguage(new File(path+"/languages/en_US.properties"));
+        language.setDefaultLanguage("zh_CN");
     }
 
     public void loadScoreboardSetting(){
