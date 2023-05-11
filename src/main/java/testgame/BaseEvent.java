@@ -47,7 +47,7 @@ public class BaseEvent implements Listener {
                     Map<String, Integer> map = (Map<String, Integer>) room2.getRoomProperties("mapRanks");
                     map.put(formResponseSimple.getClickedButton().getText(), map.getOrDefault(formResponseSimple.getClickedButton().getText(), 0) + 1);
                     room2.setRoomProperties("mapRanks", map);
-                    player.sendMessage(MainClass.language.getText("game.message.mapSelected", formResponseSimple.getClickedButton().getText()));
+                    player.sendMessage(MainClass.language.getText("game.message.mapVoted", formResponseSimple.getClickedButton().getText()));
                     player.getInventory().setItem(1, new BlockAir().toItem());
                 }
             }
