@@ -6,6 +6,7 @@ import gameapi.GameAPI;
 import gameapi.room.Room;
 import lombok.Getter;
 import lombok.Setter;
+import testgame.MainClass;
 import testgame.scripts.controller.type.TriggerControllerData;
 
 import java.util.ArrayList;
@@ -101,7 +102,7 @@ public class Controller {
     }
     
     public void wrongFormatWarning(){
-        GameAPI.plugin.getLogger().warning("Json Wrong Format! Binding type: "+binding_type + ",Binding values: "+ binding_value.toString());
+        GameAPI.plugin.getLogger().warning(MainClass.language.getText("skill.wrongJson", binding_type, binding_value.toString()));
     }
 
     @Override

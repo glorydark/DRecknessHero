@@ -4,6 +4,7 @@ import cn.nukkit.Player;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.window.FormWindowSimple;
 import com.sun.istack.internal.NotNull;
+import gameapi.GameAPI;
 import gameapi.room.Room;
 import gameapi.utils.GameRecord;
 import testgame.scripts.CustomSkill;
@@ -11,7 +12,7 @@ import testgame.scripts.CustomSkill;
 public class Window {
     public static void showPlayerRoomListWindow(@NotNull Player player){
         if(!BaseEvent.playerFormWindowSimpleHashMap.containsKey(player)) {
-            FormWindowSimple simple = new FormWindowSimple("§l§e选择房间", "请选择您的房间！");
+            FormWindowSimple simple = new FormWindowSimple(MainClass.language.getText("form.roomSelector.join"), MainClass.language.getText("form.roomSelector.content"));
             for (Room room : MainClass.roomListHashMap) {
                 simple.addButton(new ElementButton(room.getRoomName()));
             }
@@ -22,7 +23,7 @@ public class Window {
 
     public static void showPlayerSkillSelectWindow(@NotNull Player player) {
         if(!BaseEvent.playerFormWindowSimpleHashMap.containsKey(player)) {
-            FormWindowSimple simple = new FormWindowSimple("§l§e选择技能", "请选择您的技能！");
+            FormWindowSimple simple = new FormWindowSimple(MainClass.language.getText("room.joinItem.jobSelector.name"), MainClass.language.getText("form.jobSelector.content"));
             for(CustomSkill skill: MainClass.skills.values()){
                 simple.addButton(new ElementButton(skill.getCustomName()));
             }
@@ -33,8 +34,8 @@ public class Window {
 
     public static void showPlayerHistoryWindow(@NotNull Player player){
         if(!BaseEvent.playerFormWindowSimpleHashMap.containsKey(player)) {
-            FormWindowSimple window = new FormWindowSimple("§l§a历史战绩", "");
-            window.setContent("Win(获胜次数): §6" + GameRecord.getGameRecord("DRecknessHero", player.getName(), "win") + "\n§fFail(失败次数): §c" + GameRecord.getGameRecord("DRecknessHero", player.getName(), "lose"));
+            FormWindowSimple window = new FormWindowSimple(MainClass.language.getText("room.joinItem.history.name"), "");
+            window.setContent(MainClass.language.getText("form.history.content", GameRecord.getGameRecord("DRecknessHero", player.getName(), "win"), GameRecord.getGameRecord("DRecknessHero", player.getName(), "lose")));
             BaseEvent.playerFormWindowSimpleHashMap.put(player, window);
             player.showFormWindow(window);
         }
@@ -42,7 +43,7 @@ public class Window {
 
     public static void showVoteForMap(@NotNull Player player){
         if(!BaseEvent.playerFormWindowSimpleHashMap.containsKey(player)) {
-            FormWindowSimple window = new FormWindowSimple("§l§e选择地图", "");
+            FormWindowSimple window = new FormWindowSimple(MainClass.language.getText("room.joinItem.mapSelector.name"), MainClass.language.getText("form.mapSelector.content"));
             for(String map: MainClass.maps){
                 window.addButton(new ElementButton(map));
             }

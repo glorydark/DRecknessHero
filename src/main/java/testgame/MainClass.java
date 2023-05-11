@@ -6,6 +6,7 @@ import cn.nukkit.block.Block;
 import cn.nukkit.item.*;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
+import cn.nukkit.utils.TextFormat;
 import gameapi.GameAPI;
 import gameapi.arena.Arena;
 import gameapi.effect.EasyEffect;
@@ -13,6 +14,7 @@ import gameapi.listener.base.GameListenerRegistry;
 import gameapi.room.Room;
 import gameapi.room.RoomRule;
 import gameapi.room.RoomStatus;
+import gameapi.utils.Language;
 import testgame.scripts.CustomSkill;
 import testgame.scripts.TriggerListener;
 
@@ -32,6 +34,8 @@ public class MainClass extends PluginBase {
 
     public static boolean enableScoreboard = false;
 
+    public static Language language = new Language("DRecknessHero");
+
     @Override
     public void onLoad() {
         super.onLoad();
@@ -48,12 +52,10 @@ public class MainClass extends PluginBase {
 
     @Override
     public void onEnable() {
-        this.getLogger().info("欢迎使用本插件【RecknessHero】");
-        this.getLogger().info("您安装的本插件不需要收费购买，作者minebbs昵称:Glorydark！");
-        this.getServer().getPluginManager().registerEvents(new BaseEvent(),this);
-        GameListenerRegistry.registerEvents("DRecknessHero", new GameEvent(), this);
-        this.getServer().getCommandMap().register("暴走英雄",new GameCommand("drh"));
+        this.getLogger().info("RecknessHero enabled!");
+        this.getLogger().info("This plugin is free of charge. You can find it on MineBBS. Author:Glorydark！");
         path = getDataFolder().getPath();
+        this.loadLanguage();
         this.saveResource("blockaddons.yml",false);
         this.saveResource("rooms.yml",false);
         this.saveResource("maps.yml",false);
@@ -80,14 +82,23 @@ public class MainClass extends PluginBase {
         Config mapsCfg = new Config(path+"/maps.yml");
         maps.addAll(mapsCfg.getKeys(false));
         GameAPI.addLoadedGame("DRecknessHero");
+
+        this.getServer().getPluginManager().registerEvents(new BaseEvent(),this);
+        GameListenerRegistry.registerEvents("DRecknessHero", new GameEvent(), this);
+        this.getServer().getCommandMap().register("DRecknessHero",new GameCommand("drh"));
+    }
+
+    public void loadLanguage(){
+        this.saveResource(path+"/languages/zh_CN.properties", false);
+        language.addLanguage(new File(path+"/languages/zh_CN.properties"));
     }
 
     public void loadScoreboardSetting(){
-        this.getLogger().info("正在加载计分板设置...");
+        this.getLogger().info(language.getText("scoreboard.setting.loading"));
         Config config = new Config(this.getDataFolder()+"/scoreboard.yml",Config.YAML);
         scoreboardCfg = config.getAll();
         enableScoreboard = config.getBoolean("enabled", false);
-        this.getLogger().info("记分板设置加载成功！");
+        this.getLogger().info(language.getText("scoreboard.setting.loadedSuccessfully"));
     }
 
     public static String getScoreboardSetting(String key){
@@ -102,12 +113,12 @@ public class MainClass extends PluginBase {
         Config config = new Config(this.getDataFolder()+"/blockaddons.yml",Config.YAML);
         effectHashMap = new HashMap<>();
         for(String string: config.getKeys(false)){
-            this.getLogger().info("正在加载方块"+string+"的拓展数据");
+            this.getLogger().info(language.getText("blockAddon.item.loading", string));
             for(Room room:roomListHashMap){
                 RoomRule roomRule = room.getRoomRule();
                 roomRule.canBreakBlocks.add(string);
                 room.setRoomRule(roomRule);
-                this.getLogger().info("方块"+string+"已被允许在游戏中破坏");
+                this.getLogger().info(language.getText("blockAddon.item.loadedSuccessfully", string));
             }
             List<EasyEffect> effectList = new ArrayList<>();
             for(String effectStr: config.getStringList(string+".effects")) {
@@ -120,7 +131,7 @@ public class MainClass extends PluginBase {
             }
             effectHashMap.put(string,effectList);
         }
-        this.getLogger().info("方块拓展加载成功！");
+        this.getLogger().info(language.getText("blockAddon.all.loaded"));
     }
 
     public void loadRooms(){
@@ -146,33 +157,33 @@ public class MainClass extends PluginBase {
             if (Arena.copyWorldAndLoad(newName, backup)) {
                 if (Server.getInstance().isLevelLoaded(newName)) {
                     Server.getInstance().getLevelByName(newName).setAutoSave(false);
-                    this.getLogger().info("房间【" + backup + "】加载！");
+                    this.getLogger().info(language.getText("room.loading", backup));
 
                     if(config.exists(map+".WaitSpawn")){
                         room.setWaitSpawn(config.getString(map+".WaitSpawn").replace(backup, newName));
                     }else{
-                        this.getLogger().info("房间【"+map+"】加载失败,请检查等待点配置！");
+                        this.getLogger().info(language.getText("room.loadedFailed.error.waitSpawn", map));
                         return;
                     }
 
                     if(config.exists(map+".StartSpawn")){
                         room.addStartSpawn(config.getString(map+".StartSpawn").replace(backup, newName));
                     }else{
-                        this.getLogger().info("房间【"+map+"】加载失败,请检查出生地配置！");
+                        this.getLogger().info(language.getText("room.loadedFailed.error.startSpawn", map));
                         return;
                     }
 
                     if(config.exists(map+".WaitTime")){
                         room.setWaitTime(config.getInt(map+".WaitTime"));
                     }else{
-                        this.getLogger().info("房间【"+map+"】加载失败,请检查等待时间配置！");
+                        this.getLogger().info(language.getText("room.loadedFailed.error.waitTime", map));
                         return;
                     }
 
                     if(config.exists(map+".GameTime")){
                         room.setGameTime(config.getInt(map+".GameTime"));
                     }else{
-                        this.getLogger().info("房间【"+map+"】加载失败,请检查游戏时间配置！");
+                        this.getLogger().info(language.getText("room.loadedFailed.error.gameTime", map));
                         return;
                     }
                     room.setMinPlayer(min);
@@ -184,15 +195,15 @@ public class MainClass extends PluginBase {
                     room.setRoomStatus(RoomStatus.ROOM_STATUS_WAIT);
                     room.setWinConsoleCommands(new ArrayList<>(config.getStringList(map+".WinCommands")));
                     room.setLoseConsoleCommands(new ArrayList<>(config.getStringList(map+".FailCommands")));
-                    this.getLogger().info("房间【"+map+"】加载成功！");
+                    this.getLogger().info(language.getText("room.loadedSuccessfully", map));
                 } else {
-                    this.getLogger().info("房间【" + backup + "】地图加载失败！");
+                    this.getLogger().info(language.getText("room.loadedFailed.error.loadMap", map));
                 }
             } else {
-                this.getLogger().info("房间【" + roomName + "】地图复制失败！");
+                this.getLogger().info(language.getText("room.loadedFailed.error.copyMap", map));
             }
         } else {
-            this.getLogger().info("房间【" + roomName + "】加载失败,请检查地图是否存在！");
+            this.getLogger().info(language.getText("room.loadedFailed.error.mapNotFound", map));
         }
     }
 
@@ -203,29 +214,29 @@ public class MainClass extends PluginBase {
                 p.getUIInventory().clearAll();
                 p.setGamemode(2);
                 Item addItem1 = new ItemBookEnchanted();
-                addItem1.setCustomName("§l§c退出房间");
+                addItem1.setCustomName(language.getText("room.joinItem.quit.name"));
                 p.getInventory().setItem(0, addItem1);
 
                 Item addItem2 = new ItemEmerald();
-                addItem2.setCustomName("§l§a历史战绩");
+                addItem2.setCustomName(language.getText("room.joinItem.history.name"));
                 p.getInventory().setItem(7, addItem2);
 
                 if (skillEnabled) {
                     room.setPlayerProperties(p.getName(), "skill1", "DRecknessHero_SpeedUp");
                     Item addItem3 = new ItemTotem(0);
-                    addItem3.setCustomName("§l§e选择职业");
+                    addItem3.setCustomName(language.getText("room.joinItem.jobSelector.name"));
                     p.getInventory().setItem(8, addItem3);
                 }
 
                 if (room.getTemporary()) {
                     Item addItem4 = new ItemPaper(0);
-                    addItem4.setCustomName("§l§e选择地图");
+                    addItem4.setCustomName(language.getText("room.joinItem.mapSelector.name"));
                     p.getInventory().setItem(1, addItem4);
                 }
                 return true;
             }
         }else{
-            p.sendMessage("该房间不存在！");
+            p.sendMessage(language.getText("error.roomNotFound"));
         }
         return false;
     }

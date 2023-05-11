@@ -32,28 +32,24 @@ public class BaseEvent implements Listener {
             String title = ((FormWindowSimple) event.getWindow()).getTitle();
             FormResponseSimple formResponseSimple = (FormResponseSimple) event.getResponse();
             Player player = event.getPlayer();
-            switch (title) {
-                case "§l§e选择房间":
-                    Room room = Room.getRoom("DRecknessHero", formResponseSimple.getClickedButton().getText());
-                    MainClass.processJoin(room, player);
-                    break;
-                case "§l§e选择技能":
-                    Room room1 = Room.getRoom("DRecknessHero", player);
-                    if (room1 != null) {
-                        player.sendMessage("您已选择技能: " + formResponseSimple.getClickedButton().getText());
-                        room1.setPlayerProperties(player.getName(), "skill1", MainClass.skills.values().toArray(new CustomSkill[0])[formResponseSimple.getClickedButtonId()].getIdentifier());
-                    }
-                    break;
-                case "§l§e选择地图":
-                    Room room2 = Room.getRoom("DRecknessHero", player);
-                    if (room2 != null) {
-                        Map<String, Integer> map = (Map<String, Integer>) room2.getRoomProperties("mapRanks");
-                        map.put(formResponseSimple.getClickedButton().getText(), map.getOrDefault(formResponseSimple.getClickedButton().getText(), 0) + 1);
-                        room2.setRoomProperties("mapRanks", map);
-                        player.sendMessage("您为地图【" + formResponseSimple.getClickedButton().getText() + "】投上一票！");
-                        player.getInventory().setItem(1, new BlockAir().toItem());
-                    }
-                    break;
+            if(title.equals(MainClass.language.getText("form.roomSelector.join"))) {
+                Room room = Room.getRoom("DRecknessHero", formResponseSimple.getClickedButton().getText());
+                MainClass.processJoin(room, player);
+            }else if(title.equals(MainClass.language.getText("room.joinItem.jobSelector.name"))) {
+                Room room1 = Room.getRoom("DRecknessHero", player);
+                if (room1 != null) {
+                    player.sendMessage(MainClass.language.getText("game.message.jobSelected", formResponseSimple.getClickedButton().getText()));
+                    room1.setPlayerProperties(player.getName(), "skill1", MainClass.skills.values().toArray(new CustomSkill[0])[formResponseSimple.getClickedButtonId()].getIdentifier());
+                }
+            }else if(title.equals(MainClass.language.getText("room.joinItem.mapSelector.name"))) {
+                Room room2 = Room.getRoom("DRecknessHero", player);
+                if (room2 != null) {
+                    Map<String, Integer> map = (Map<String, Integer>) room2.getRoomProperties("mapRanks");
+                    map.put(formResponseSimple.getClickedButton().getText(), map.getOrDefault(formResponseSimple.getClickedButton().getText(), 0) + 1);
+                    room2.setRoomProperties("mapRanks", map);
+                    player.sendMessage(MainClass.language.getText("game.message.mapSelected", formResponseSimple.getClickedButton().getText()));
+                    player.getInventory().setItem(1, new BlockAir().toItem());
+                }
             }
         }
     }
