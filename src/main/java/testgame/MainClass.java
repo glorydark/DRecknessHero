@@ -56,6 +56,7 @@ public class MainClass extends PluginBase {
         this.getLogger().info("This plugin is free of charge. You can find it on MineBBS. Author:Glorydark！");
         path = getDataFolder().getPath();
         this.loadLanguage();
+        this.saveDefaultConfig();
         this.saveResource("blockaddons.yml",false);
         this.saveResource("rooms.yml",false);
         this.saveResource("maps.yml",false);
@@ -93,7 +94,8 @@ public class MainClass extends PluginBase {
         this.saveResource("languages/en_US.properties", false);
         language.addLanguage(new File(path+"/languages/zh_CN.properties"));
         language.addLanguage(new File(path+"/languages/en_US.properties"));
-        language.setDefaultLanguage("zh_CN");
+        Config config = new Config(path+"/config.yml", Config.YAML);
+        language.setDefaultLanguage(config.getString("default_language", "en_US"));
     }
 
     public void loadScoreboardSetting(){
