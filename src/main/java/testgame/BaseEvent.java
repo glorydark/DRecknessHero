@@ -32,22 +32,22 @@ public class BaseEvent implements Listener {
             String title = ((FormWindowSimple) event.getWindow()).getTitle();
             FormResponseSimple formResponseSimple = (FormResponseSimple) event.getResponse();
             Player player = event.getPlayer();
-            if(title.equals(MainClass.language.getText("form.roomSelector.join"))) {
+            if(title.equals(MainClass.language.getTranslation(player, "form.roomSelector.join"))) {
                 Room room = Room.getRoom("DRecknessHero", formResponseSimple.getClickedButton().getText());
                 MainClass.processJoin(room, player);
-            }else if(title.equals(MainClass.language.getText("room.joinItem.jobSelector.name"))) {
+            }else if(title.equals(MainClass.language.getTranslation(player, "room.joinItem.jobSelector.name"))) {
                 Room room1 = Room.getRoom("DRecknessHero", player);
                 if (room1 != null) {
-                    player.sendMessage(MainClass.language.getText("game.message.jobSelected", formResponseSimple.getClickedButton().getText()));
+                    player.sendMessage(MainClass.language.getTranslation(player, "game.message.jobSelected", formResponseSimple.getClickedButton().getText()));
                     room1.setPlayerProperties(player.getName(), "skill1", MainClass.skills.values().toArray(new CustomSkill[0])[formResponseSimple.getClickedButtonId()].getIdentifier());
                 }
-            }else if(title.equals(MainClass.language.getText("room.joinItem.mapSelector.name"))) {
+            }else if(title.equals(MainClass.language.getTranslation(player, "room.joinItem.mapSelector.name"))) {
                 Room room2 = Room.getRoom("DRecknessHero", player);
                 if (room2 != null) {
                     Map<String, Integer> map = (Map<String, Integer>) room2.getRoomProperties("mapRanks");
                     map.put(formResponseSimple.getClickedButton().getText(), map.getOrDefault(formResponseSimple.getClickedButton().getText(), 0) + 1);
                     room2.setRoomProperties("mapRanks", map);
-                    player.sendMessage(MainClass.language.getText("game.message.mapVoted", formResponseSimple.getClickedButton().getText()));
+                    player.sendMessage(MainClass.language.getTranslation(player, "game.message.mapVoted", formResponseSimple.getClickedButton().getText()));
                     player.getInventory().setItem(1, new BlockAir().toItem());
                 }
             }

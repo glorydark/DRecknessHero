@@ -102,7 +102,7 @@ public class Controller {
     }
     
     public void wrongFormatWarning(){
-        GameAPI.plugin.getLogger().warning(MainClass.language.getText("skill.wrongJson", binding_type, binding_value.toString()));
+        GameAPI.plugin.getLogger().warning(MainClass.language.getTranslation("skill.wrongJson", binding_type, binding_value.toString()));
     }
 
     @Override

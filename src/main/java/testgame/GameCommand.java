@@ -24,7 +24,7 @@ public class GameCommand extends Command {
                     if(sender.isPlayer()) {
                         Player player = (Player) sender;
                         for (Room room : MainClass.roomListHashMap) {
-                            if (room.getTemporary()) {
+                            if (room.isTemporary()) {
                                 if(MainClass.processJoin(room, player)) {
                                     return true;
                                 }
@@ -40,7 +40,7 @@ public class GameCommand extends Command {
                             Room room = Room.getRoom("DRecknessHero", strings[1]);
                             MainClass.processJoin(room, player);
                         } else {
-                            sender.sendMessage(MainClass.language.getText("error.useInGame"));
+                            sender.sendMessage(MainClass.language.getTranslation("error.useInGame"));
                         }
                     }
                     break;
@@ -50,47 +50,47 @@ public class GameCommand extends Command {
                         Room room = Room.getRoom(player);
                         if(room != null){
                             room.removePlayer(player, GameAPI.saveBag);
-                            player.sendMessage(MainClass.language.getText("command.quit.success"));
+                            player.sendMessage(MainClass.language.getTranslation(player, "command.quit.success"));
                         }else{
-                            player.sendMessage(MainClass.language.getText("command.quit.failed"));
+                            player.sendMessage(MainClass.language.getTranslation(player, "command.quit.failed"));
                         }
                     } else {
-                        sender.sendMessage(MainClass.language.getText("error.useInGame"));
+                        sender.sendMessage(MainClass.language.getTranslation("error.useInGame"));
                     }
                     break;
                 case "list":
-                    sender.sendMessage(MainClass.language.getText("command.list.title"));
+                    sender.sendMessage(MainClass.language.getTranslation(sender, "command.list.title"));
                     for(Room room:MainClass.roomListHashMap){
                         switch (room.getRoomStatus()){
                             case ROOM_STATUS_Ceremony:
                             case ROOM_STATUS_GameEnd:
                             case ROOM_STATUS_End:
-                                sender.sendMessage(MainClass.language.getText("command.list.item.endApproaching", room.getRoomName()));
+                                sender.sendMessage(MainClass.language.getTranslation(sender, "command.list.item.endApproaching", room.getRoomName()));
                                 break;
                             case ROOM_STATUS_PreStart:
                             case ROOM_STATUS_GameStart:
-                                sender.sendMessage(MainClass.language.getText("command.list.item.start", room.getRoomName()));
+                                sender.sendMessage(MainClass.language.getTranslation(sender, "command.list.item.start", room.getRoomName()));
                                 break;
                             case ROOM_STATUS_GameReadyStart:
                             case ROOM_STATUS_NextRoundPreStart:
                             case ROOM_STATUS_WAIT:
-                                sender.sendMessage(MainClass.language.getText("command.list.item.wait", room.getRoomName(),room.getPlayers().size(),room.getMaxPlayer()));
+                                sender.sendMessage(MainClass.language.getTranslation(sender, "command.list.item.wait", room.getRoomName(),room.getPlayers().size(),room.getMaxPlayer()));
                                 break;
                         }
                     }
                     break;
                 case "help":
-                    sender.sendMessage(MainClass.language.getText("command.help.title"));
-                    sender.sendMessage(MainClass.language.getText("command.help.join"));
-                    sender.sendMessage(MainClass.language.getText("command.help.quit"));
-                    sender.sendMessage(MainClass.language.getText("command.help.list"));
+                    sender.sendMessage(MainClass.language.getTranslation(sender, "command.help.title"));
+                    sender.sendMessage(MainClass.language.getTranslation(sender, "command.help.join"));
+                    sender.sendMessage(MainClass.language.getTranslation(sender, "command.help.quit"));
+                    sender.sendMessage(MainClass.language.getTranslation(sender, "command.help.list"));
                     break;
             }
         }else{
             if (Server.getInstance().getPlayer(sender.getName()) != null) {
                 Window.showPlayerRoomListWindow((Player) sender);
             } else {
-                sender.sendMessage(MainClass.language.getText("error.useInGame"));
+                sender.sendMessage(MainClass.language.getTranslation("error.useInGame"));
             }
         }
         return true;

@@ -67,7 +67,7 @@ public class CustomSkill { //常规药水技能
     public CustomSkill(File file){
         this.identifier = file.getName().replace(".json", "");
         if(!file.exists()){
-            GameAPI.plugin.getLogger().warning(MainClass.language.getText("skill.loadFailed", identifier));
+            GameAPI.plugin.getLogger().warning(MainClass.language.getTranslation("skill.loadFailed", identifier));
             return;
         }
         Gson gson = new GsonBuilder().registerTypeAdapter(new TypeToken<Map<String, Object>>()
@@ -211,7 +211,7 @@ public class CustomSkill { //常规药水技能
         removeSkillItem(player);
         player.getInventory().setItem(8, this.getItem());
         if(sendMsg){
-            player.sendMessage(MainClass.language.getText("skill.playerObtained", customName));
+            player.sendMessage(MainClass.language.getTranslation(player, "skill.playerObtained", customName));
         }
         this.isCoolDown = false;
     }
@@ -235,20 +235,20 @@ public class CustomSkill { //常规药水技能
         Item item = player.getInventory().getItemInHand();
         if(!item.equals(this.getItem())){ return; }
         if(this.isCoolDown){
-            player.sendMessage(MainClass.language.getText("skill.inCoolDown"));
+            player.sendMessage(MainClass.language.getTranslation(player, "skill.inCoolDown"));
             return;
         }
         this.isCoolDown = true;
         if(GameAPI.debug.contains(player)) {
             player.sendMessage("[GameTest] Check Controller success!");
         }
-        player.sendMessage(MainClass.language.getText("skill.playerUsed", this.getCustomName()));
+        player.sendMessage(MainClass.language.getTranslation(player, "skill.playerUsed", this.getCustomName()));
         Server.getInstance().getScheduler().scheduleDelayedTask(GameAPI.plugin, ()->{
             Room room1 = Room.getRoom(player);
             if(room1 == null){ return; }
             if(room1.getRoomStatus() != RoomStatus.ROOM_STATUS_GameStart){ return; }
             this.giveSkillItem(player, false);
-            player.sendMessage(MainClass.language.getText("skill.recharged"));
+            player.sendMessage(MainClass.language.getTranslation(player, "skill.recharged"));
             for(String string: endConsoleCommands){
                 Server.getInstance().dispatchCommand(Server.getInstance().getConsoleSender(), string.replace("%player%", player.getName()).replace("%level%", player.getLevel().getName()));
                 if(!player.isOnline()){ return; }
@@ -337,12 +337,12 @@ public class CustomSkill { //常规药水技能
     }
 
     public static CustomSkill getSkill(String identifier){
-        if(!MainClass.skills.containsKey(identifier)){ GameAPI.plugin.getLogger().warning(MainClass.language.getText("skill.notFound")); return null;}
+        if(!MainClass.skills.containsKey(identifier)){ GameAPI.plugin.getLogger().warning(MainClass.language.getTranslation("skill.notFound")); return null;}
         return MainClass.skills.get(identifier);
     }
 
     public void loadSkill(){
-        GameAPI.plugin.getLogger().alert(MainClass.language.getText("skill.loading", this.getIdentifier()));
+        GameAPI.plugin.getLogger().alert(MainClass.language.getTranslation("skill.loading", this.getIdentifier()));
         if(!MainClass.skills.containsValue(this)) {
             MainClass.skills.put(this.getIdentifier(), this);
         }

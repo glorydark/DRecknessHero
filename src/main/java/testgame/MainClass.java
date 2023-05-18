@@ -99,11 +99,11 @@ public class MainClass extends PluginBase {
     }
 
     public void loadScoreboardSetting(){
-        this.getLogger().info(language.getText("scoreboard.setting.loading"));
+        this.getLogger().info(language.getTranslation("scoreboard.setting.loading"));
         Config config = new Config(this.getDataFolder()+"/scoreboard.yml",Config.YAML);
         scoreboardCfg = config.getAll();
         enableScoreboard = config.getBoolean("enabled", false);
-        this.getLogger().info(language.getText("scoreboard.setting.loadedSuccessfully"));
+        this.getLogger().info(language.getTranslation("scoreboard.setting.loadedSuccessfully"));
     }
 
     public static String getScoreboardSetting(String key){
@@ -118,12 +118,12 @@ public class MainClass extends PluginBase {
         Config config = new Config(this.getDataFolder()+"/blockaddons.yml",Config.YAML);
         effectHashMap = new HashMap<>();
         for(String string: config.getKeys(false)){
-            this.getLogger().info(language.getText("blockAddon.item.loading", string));
+            this.getLogger().info(language.getTranslation("blockAddon.item.loading", string));
             for(Room room:roomListHashMap){
                 RoomRule roomRule = room.getRoomRule();
                 roomRule.canBreakBlocks.add(string);
                 room.setRoomRule(roomRule);
-                this.getLogger().info(language.getText("blockAddon.item.loadedSuccessfully", string));
+                this.getLogger().info(language.getTranslation("blockAddon.item.loadedSuccessfully", string));
             }
             List<EasyEffect> effectList = new ArrayList<>();
             for(String effectStr: config.getStringList(string+".effects")) {
@@ -136,7 +136,7 @@ public class MainClass extends PluginBase {
             }
             effectHashMap.put(string,effectList);
         }
-        this.getLogger().info(language.getText("blockAddon.all.loaded"));
+        this.getLogger().info(language.getTranslation("blockAddon.all.loaded"));
     }
 
     public void loadRooms(){
@@ -162,33 +162,33 @@ public class MainClass extends PluginBase {
             if (Arena.copyWorldAndLoad(newName, backup)) {
                 if (Server.getInstance().isLevelLoaded(newName)) {
                     Server.getInstance().getLevelByName(newName).setAutoSave(false);
-                    this.getLogger().info(language.getText("room.loading", backup));
+                    this.getLogger().info(language.getTranslation("room.loading", backup));
 
                     if(config.exists(map+".WaitSpawn")){
                         room.setWaitSpawn(config.getString(map+".WaitSpawn").replace(backup, newName));
                     }else{
-                        this.getLogger().info(language.getText("room.loadedFailed.error.waitSpawn", map));
+                        this.getLogger().info(language.getTranslation("room.loadedFailed.error.waitSpawn", map));
                         return;
                     }
 
                     if(config.exists(map+".StartSpawn")){
                         room.addStartSpawn(config.getString(map+".StartSpawn").replace(backup, newName));
                     }else{
-                        this.getLogger().info(language.getText("room.loadedFailed.error.startSpawn", map));
+                        this.getLogger().info(language.getTranslation("room.loadedFailed.error.startSpawn", map));
                         return;
                     }
 
                     if(config.exists(map+".WaitTime")){
                         room.setWaitTime(config.getInt(map+".WaitTime"));
                     }else{
-                        this.getLogger().info(language.getText("room.loadedFailed.error.waitTime", map));
+                        this.getLogger().info(language.getTranslation("room.loadedFailed.error.waitTime", map));
                         return;
                     }
 
                     if(config.exists(map+".GameTime")){
                         room.setGameTime(config.getInt(map+".GameTime"));
                     }else{
-                        this.getLogger().info(language.getText("room.loadedFailed.error.gameTime", map));
+                        this.getLogger().info(language.getTranslation("room.loadedFailed.error.gameTime", map));
                         return;
                     }
                     room.setMinPlayer(min);
@@ -200,15 +200,15 @@ public class MainClass extends PluginBase {
                     room.setRoomStatus(RoomStatus.ROOM_STATUS_WAIT);
                     room.setWinConsoleCommands(new ArrayList<>(config.getStringList(map+".WinCommands")));
                     room.setLoseConsoleCommands(new ArrayList<>(config.getStringList(map+".FailCommands")));
-                    this.getLogger().info(language.getText("room.loadedSuccessfully", map));
+                    this.getLogger().info(language.getTranslation("room.loadedSuccessfully", map));
                 } else {
-                    this.getLogger().info(language.getText("room.loadedFailed.error.loadMap", map));
+                    this.getLogger().info(language.getTranslation("room.loadedFailed.error.loadMap", map));
                 }
             } else {
-                this.getLogger().info(language.getText("room.loadedFailed.error.copyMap", map));
+                this.getLogger().info(language.getTranslation("room.loadedFailed.error.copyMap", map));
             }
         } else {
-            this.getLogger().info(language.getText("room.loadedFailed.error.mapNotFound", map));
+            this.getLogger().info(language.getTranslation("room.loadedFailed.error.mapNotFound", map));
         }
     }
 
@@ -219,29 +219,29 @@ public class MainClass extends PluginBase {
                 p.getUIInventory().clearAll();
                 p.setGamemode(2);
                 Item addItem1 = new ItemBookEnchanted();
-                addItem1.setCustomName(language.getText("room.joinItem.quit.name"));
+                addItem1.setCustomName(language.getTranslation(p, "room.joinItem.quit.name"));
                 p.getInventory().setItem(0, addItem1);
 
                 Item addItem2 = new ItemEmerald();
-                addItem2.setCustomName(language.getText("room.joinItem.history.name"));
+                addItem2.setCustomName(language.getTranslation(p, "room.joinItem.history.name"));
                 p.getInventory().setItem(7, addItem2);
 
                 if (skillEnabled) {
                     room.setPlayerProperties(p.getName(), "skill1", "DRecknessHero_SpeedUp");
                     Item addItem3 = new ItemTotem(0);
-                    addItem3.setCustomName(language.getText("room.joinItem.jobSelector.name"));
+                    addItem3.setCustomName(language.getTranslation(p,"room.joinItem.jobSelector.name"));
                     p.getInventory().setItem(8, addItem3);
                 }
 
-                if (room.getTemporary()) {
+                if (room.isTemporary()) {
                     Item addItem4 = new ItemPaper(0);
-                    addItem4.setCustomName(language.getText("room.joinItem.mapSelector.name"));
+                    addItem4.setCustomName(language.getTranslation(p,"room.joinItem.mapSelector.name"));
                     p.getInventory().setItem(1, addItem4);
                 }
                 return true;
             }
         }else{
-            p.sendMessage(language.getText("error.roomNotFound"));
+            p.sendMessage(language.getTranslation(p, "error.roomNotFound"));
         }
         return false;
     }
