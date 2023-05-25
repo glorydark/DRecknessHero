@@ -98,15 +98,14 @@ public class GameCommand extends Command {
 
     public Room loadRoom(){
         RoomRule roomRule = new RoomRule(0);
-        roomRule.allowBreakBlock = false;
-        roomRule.allowPlaceBlock = false;
-        roomRule.allowFallDamage = false;
-        roomRule.allowDamagePlayer = false;
-        roomRule.allowHungerDamage = false;
-        roomRule.allowFoodLevelChange = false;
-        roomRule.canBreakBlocks.add("100:14");
-        roomRule.canPlaceBlocks.add("152:0");
-        roomRule.canBreakBlocks.addAll(MainClass.effectHashMap.keySet());
+        roomRule.setAllowBreakBlock(false);
+        roomRule.setAllowPlaceBlock(false);
+        roomRule.setAllowFallDamage(false);
+        roomRule.setAllowHungerDamage(false);
+        roomRule.setAllowFoodLevelChange(false);
+        roomRule.getAllowBreakBlocks().add("100:14");
+        roomRule.getAllowPlaceBlocks().add("152:0");
+        roomRule.getAllowBreakBlocks().addAll(MainClass.effectHashMap.keySet());
         Room room = new Room("DRecknessHero", roomRule, "", 1);
         room.setTemporary(true);
         room.setResetMap(false);

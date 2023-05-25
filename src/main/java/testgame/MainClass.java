@@ -6,15 +6,14 @@ import cn.nukkit.block.Block;
 import cn.nukkit.item.*;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
-import cn.nukkit.utils.TextFormat;
 import gameapi.GameAPI;
 import gameapi.arena.Arena;
 import gameapi.effect.EasyEffect;
+import gameapi.languages.Language;
 import gameapi.listener.base.GameListenerRegistry;
 import gameapi.room.Room;
 import gameapi.room.RoomRule;
 import gameapi.room.RoomStatus;
-import gameapi.utils.Language;
 import testgame.scripts.CustomSkill;
 import testgame.scripts.TriggerListener;
 
@@ -121,7 +120,7 @@ public class MainClass extends PluginBase {
             this.getLogger().info(language.getTranslation("blockAddon.item.loading", string));
             for(Room room:roomListHashMap){
                 RoomRule roomRule = room.getRoomRule();
-                roomRule.canBreakBlocks.add(string);
+                roomRule.getAllowBreakBlocks().add(string);
                 room.setRoomRule(roomRule);
                 this.getLogger().info(language.getTranslation("blockAddon.item.loadedSuccessfully", string));
             }
@@ -149,10 +148,17 @@ public class MainClass extends PluginBase {
     public void loadRoom(String map, String roomName, Integer min, Integer max){
         RoomRule roomRule = new RoomRule(0);
         Config config = new Config(path+"/maps.yml", Config.YAML);
-        roomRule.canBreakBlocks.add("100:14");
-        roomRule.canPlaceBlocks.add("152:0");
-        roomRule.allowFoodLevelChange = false;
-        roomRule.canBreakBlocks.addAll(effectHashMap.keySet());
+        roomRule.setAllowPlaceBlock(false);
+        roomRule.setAllowBreakBlock(false);
+        roomRule.getAllowBreakBlocks().add("100:14");
+        roomRule.getAllowPlaceBlocks().add("152:0");
+        roomRule.setAllowFoodLevelChange(false);
+        roomRule.setAllowDamagePlayer(false);
+        roomRule.setAllowRespawn(false);
+        roomRule.setAllowFallDamage(false);
+        roomRule.setAllowFireDamage(false);
+        roomRule.setRespawnCoolDownTick(1);
+        roomRule.getAllowBreakBlocks().addAll(effectHashMap.keySet());
         Room room = new Room("DRecknessHero", roomRule, "", 1);
         room.setRoomName(roomName);
         if (config.exists(map + ".LoadWorld")) {

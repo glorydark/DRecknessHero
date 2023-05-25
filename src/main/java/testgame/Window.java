@@ -4,7 +4,6 @@ import cn.nukkit.Player;
 import cn.nukkit.form.element.ElementButton;
 import cn.nukkit.form.window.FormWindowSimple;
 import com.sun.istack.internal.NotNull;
-import gameapi.GameAPI;
 import gameapi.room.Room;
 import gameapi.utils.GameRecord;
 import testgame.scripts.CustomSkill;
